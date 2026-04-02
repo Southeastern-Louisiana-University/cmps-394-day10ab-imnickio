@@ -1,0 +1,3 @@
+i got the trivy scans clean and the grype for the ui but i wasn't able to find a base python image
+that didn't have at least 1 "fixable" vulnerability in grype, upgrading to the version where one is fixed introduces
+new unfixed problems only fixed in alpha versions or versions not yet on docker.

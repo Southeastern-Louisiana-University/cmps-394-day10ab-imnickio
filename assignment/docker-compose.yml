@@ -1,0 +1,87 @@
+version: "3.8"
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    command: start-dev
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    networks:
+      - app_network
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: "ItemDatabase"
+      MYSQL_ROOT_PASSWORD: "password"
+    networks:
+      - app_network
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-ppassword",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app-1:
+    build: .
+    restart: on-failure
+    ##ports:
+    ##  - "8000:8000"
+    networks:
+      - app_network
+    depends_on:
+      db:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    environment:
+      - DATABASE_URL=mysql+pymysql://root:password@db:3306/ItemDatabase
+      - API_INSTANCE=1
+
+  app-2:
+    build: .
+    restart: on-failure
+    ##ports:
+    ##  - "8000:8000"
+    networks:
+      - app_network
+    depends_on:
+      keycloak:
+        condition: service_started
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=mysql+pymysql://root:password@db:3306/ItemDatabase
+      - API_INSTANCE=2
+
+  ui:
+    build: ./ui
+    ports:
+      - "80:80"
+    depends_on:
+      - keycloak
+      - app-1
+      - app-2
+    networks:
+      - app_network
+
+volumes:
+  db_data:
+
+networks:
+  app_network:
