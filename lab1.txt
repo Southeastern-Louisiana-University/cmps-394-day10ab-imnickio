@@ -1,0 +1,58 @@
+nginx:1.29-alpine (alpine 3.23.3)
+=================================
+Total: 4 (UNKNOWN: 0, LOW: 0, MEDIUM: 1, HIGH: 3, CRITICAL: 0)
+
+┌─────────┬────────────────┬──────────┬────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│ Library │ Vulnerability  │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                          
+   │
+├─────────┼────────────────┼──────────┼────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ libpng  │ CVE-2026-33416 │ HIGH     │ fixed  │ 1.6.55-r0         │ 1.6.56-r0     │ libpng: libpng: Arbitrary code execution due to           
+   │
+│         │                │          │        │                   │               │ use-after-free vulnerability                              
+   │
+│         │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-33416                
+   │
+│         ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│         │ CVE-2026-33636 │          │        │                   │               │ libpng: libpng: Information disclosure and denial of service │
+│         │                │          │        │                   │               │ via out-of-bounds read/write in...                        
+   │
+│         │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-33636                
+   │
+├─────────┼────────────────┤          │        ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ zlib    │ CVE-2026-22184 │          │        │ 1.3.1-r2          │ 1.3.2-r0      │ zlib: zlib: Arbitrary code execution via buffer overflow in  │
+│         │                │          │        │                   │               │ untgz utility                                             
+   │
+│         │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-22184                
+   │
+│         ├────────────────┼──────────┤        │                   │               ├──────────────────────────────────────────────────────────────┤
+│         │ CVE-2026-27171 │ MEDIUM   │        │                   │               │ zlib: zlib: Denial of Service via infinite loop in CRC32     │
+│         │                │          │        │                   │               │ combine functions...                                      
+   │
+│         │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-27171                
+   │
+└─────────┴────────────────┴──────────┴────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────
+
+
+NAME           INSTALLED   FIXED IN   TYPE  VULNERABILITY   SEVERITY  EPSS           RISK   
+tiff           4.7.1-r0               apk   CVE-2023-6277   Medium    3.8% (87th)    2.2
+tiff           4.7.1-r0               apk   CVE-2023-52356  High      0.6% (69th)    0.5
+busybox        1.37.0-r30             apk   CVE-2025-60876  Medium    < 0.1% (19th)  < 0.1
+busybox-binsh  1.37.0-r30             apk   CVE-2025-60876  Medium    < 0.1% (19th)  < 0.1
+ssl_client     1.37.0-r30             apk   CVE-2025-60876  Medium    < 0.1% (19th)  < 0.1
+libpng         1.6.55-r0   1.6.56-r0  apk   CVE-2026-33416  High      < 0.1% (14th)  < 0.1
+libcrypto3     3.5.5-r0               apk   CVE-2026-2673   High      < 0.1% (13th)  < 0.1
+libssl3        3.5.5-r0               apk   CVE-2026-2673   High      < 0.1% (13th)  < 0.1
+curl           8.17.0-r1              apk   CVE-2026-1965   Medium    < 0.1% (17th)  < 0.1
+curl           8.17.0-r1              apk   CVE-2026-3805   High      < 0.1% (11th)  < 0.1
+curl           8.17.0-r1              apk   CVE-2025-15224  Low       < 0.1% (24th)  < 0.1
+libpng         1.6.55-r0   1.6.56-r0  apk   CVE-2026-33636  High      < 0.1% (9th)   < 0.1
+curl           8.17.0-r1              apk   CVE-2025-14819  Medium    < 0.1% (13th)  < 0.1
+curl           8.17.0-r1              apk   CVE-2025-15079  Medium    < 0.1% (10th)  < 0.1
+curl           8.17.0-r1              apk   CVE-2025-14524  Medium    < 0.1% (7th)   < 0.1
+nghttp2-libs   1.68.0-r0              apk   CVE-2026-27135  High      < 0.1% (3rd)   < 0.1
+curl           8.17.0-r1              apk   CVE-2026-3784   Medium    < 0.1% (2nd)   < 0.1
+curl           8.17.0-r1              apk   CVE-2026-3783   Medium    < 0.1% (3rd)   < 0.1
+tiff           4.7.1-r0               apk   CVE-2023-6228   Medium    < 0.1% (3rd)   < 0.1
+curl           8.17.0-r1              apk   CVE-2025-13034  Medium    < 0.1% (1st)   < 0.1
+curl           8.17.0-r1              apk   CVE-2025-14017  Medium    < 0.1% (0th)   < 0.1
+zlib           1.3.1-r2    1.3.2-r0   apk   CVE-2026-27171  Medium    < 0.1% (0th)   < 0.1

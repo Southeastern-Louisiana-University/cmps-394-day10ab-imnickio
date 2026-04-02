@@ -1,0 +1,5 @@
+realm is myrealm
+client is myclient
+root url is http://localhost
+valid redirect URI is http://localhost/index.html
+web origins is http://localhost

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Inventory Management System</title>
+    <script src="https://cdn.jsdelivr.net/npm/oidc-client-ts@3.5.0/dist/browser/oidc-client-ts.min.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        background-color: #414243;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .card {
+        background: #aaa3a3;
+        padding: 25px;
+        border-radius: 12px;
+        width: 600px;
+        margin-bottom: 20px;
+      }
+      button {
+        width: 100%;
+        padding: 12px;
+        background-color: #3182ce;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 6px;
+      }
+      .auth-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Inventory System</h1>
+
+    <div class="card">
+      <div class="auth-section">
+        <span id="user-status" style="font-weight: bold">Not Logged In</span>
+        <button id="auth-btn" style="width: 100px" onclick="handleAuth()">
+          Login
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Add New Item</h2>
+      <input type="text" id="itemName" placeholder="Item Name" />
+      <input type="number" id="itemQty" placeholder="Quantity" />
+      <button onclick="addItem()">Add to Inventory</button>
+      <div id="addStatus" class="status-msg"></div>
+    </div>
+
+    <div class="card">
+      <h2>Current Inventory</h2>
+      <button onclick="fetchAllItems()" style="background-color: #4a5568">
+        Refresh List
+      </button>
+      <table
+        id="inventoryTable"
+        style="width: 100%; margin-top: 20px; text-align: left"
+      >
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Qty</th>
+          </tr>
+        </thead>
+        <tbody id="inventoryBody"></tbody>
+      </table>
+    </div>
+
+    <script>
+      const API_URL = "/api/items";
+      const config = {
+        authority: "http://localhost:8080/realms/myrealm",
+        client_id: "myclient",
+        redirect_uri: window.location.origin + "/index.html",
+        post_logout_redirect_uri: window.location.origin + "/index.html",
+        response_type: "code",
+        scope: "openid profile",
+      };
+
+      const userManager = new oidc.UserManager(config);
+
+      if (window.location.search.includes("code=")) {
+        userManager.signinCallback().then(() => {
+          window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname,
+          );
+          updateUI();
+        });
+      }
+
+      async function updateUI() {
+        const user = await userManager.getUser();
+        const statusTxt = document.getElementById("user-status");
+        const authBtn = document.getElementById("auth-btn");
+        if (user) {
+          statusTxt.textContent =
+            "Logged in as: " + user.profile.preferred_username;
+          authBtn.textContent = "Logout";
+        } else {
+          statusTxt.textContent = "Not Logged In";
+          authBtn.textContent = "Login";
+        }
+        fetchAllItems();
+      }
+
+      async function handleAuth() {
+        const user = await userManager.getUser();
+        user ? userManager.signoutRedirect() : userManager.signinRedirect();
+      }
+
+      async function addItem() {
+        const user = await userManager.getUser();
+        if (!user) return alert("Please login first!");
+
+        const name = document.getElementById("itemName").value;
+        const qty = document.getElementById("itemQty").value;
+
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.access_token}`,
+          },
+          body: JSON.stringify({ itemname: name, quantity: parseInt(qty) }),
+        });
+
+        if (response.ok) fetchAllItems();
+        else alert("Failed to add item. Check console.");
+      }
+
+      async function fetchAllItems() {
+        const body = document.getElementById("inventoryBody");
+        try {
+          const res = await fetch(API_URL);
+          const data = await res.json();
+          body.innerHTML = data.items
+            .map(
+              (i) =>
+                `<tr><td>${i.id}</td><td>${i.itemname}</td><td>${i.quantity}</td></tr>`,
+            )
+            .join("");
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      window.onload = updateUI;
+    </script>
+  </body>
+</html>
